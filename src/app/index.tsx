@@ -107,10 +107,20 @@ import { useState, useEffect } from "react";
 import WeatherCard from "../components/WeatherCard";
 import SearchBox from "../components/SearchBox";
 import RiwayatList from "../components/RiwayatList";
+import LaporanUdaraCard from "../components/LaporanUdaraCard";
+import { LaporanUdara } from "../../types/cuaca";
 
 export default function HalamanUtama() {
   const [kotaAktif, setKotaAktif] = useState("Pekalongan");
   const [riwayat, setRiwayat] = useState<string[]>(["Pekalongan"]);
+
+  // State untuk menyimpan data laporan kualitas udara berdasarkan interface LaporanUdara
+  const [laporanUdara, setLaporanUdara] = useState<LaporanUdara>({
+    kota: "Pekalongan",
+    indeksAQI: 45,
+    tingkat: "BAIK",
+    diperbaruiPada: "08:00 WIB",
+  });
 
   // Tambahkan useEffect untuk mencatat perubahan kota aktif
   useEffect(() => {
@@ -122,12 +132,21 @@ export default function HalamanUtama() {
     if (!riwayat.includes(kota)) {
       setRiwayat([...riwayat, kota]);
     }
+
+    // Update data laporan udara saat pencarian kota
+    setLaporanUdara({
+      kota: kota,
+      indeksAQI: 75,
+      tingkat: "SEDANG",
+      diperbaruiPada: "Baru saja",
+    });
   }
 
   return (
     <View style={{ padding: 16, gap: 16 }}>
       <SearchBox onCari={handleCari} />
-      <WeatherCard kota={kotaAktif} suhu={29} tingkatAQI="BAIK" />
+      <WeatherCard kota={kotaAktif} suhu={29} tingkatAQI={laporanUdara.tingkat} />
+      <LaporanUdaraCard laporan={laporanUdara} />
       <RiwayatList daftarKota={riwayat} />
     </View>
   );
