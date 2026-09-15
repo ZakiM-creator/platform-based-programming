@@ -21,3 +21,8 @@ export interface WeatherCardProps {
     suhu: number;
     tingkatAQI: TingkatAQI;
 }
+
+export interface IndikatorAQIProps {
+    laporan?: LaporanUdara;
+    data?: LaporanUdara;
+}

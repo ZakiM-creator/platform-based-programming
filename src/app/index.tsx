@@ -108,6 +108,7 @@ import WeatherCard from "../components/WeatherCard";
 import SearchBox from "../components/SearchBox";
 import RiwayatList from "../components/RiwayatList";
 import LaporanUdaraCard from "../components/LaporanUdaraCard";
+import IndikatorAQI from "../components/IndikatorAQI";
 import { LaporanUdara } from "../../types/cuaca";
 
 export default function HalamanUtama() {
@@ -133,11 +134,30 @@ export default function HalamanUtama() {
       setRiwayat([...riwayat, kota]);
     }
 
+    // Simulasi tingkat kualitas udara berdasarkan kota yang dicari
+    const lower = kota.toLowerCase();
+    let indeks = 75;
+    let tingkat: LaporanUdara["tingkat"] = "SEDANG";
+
+    if (lower.includes("pekalongan") || lower.includes("bali")) {
+      indeks = 45;
+      tingkat = "BAIK";
+    } else if (lower.includes("jakarta")) {
+      indeks = 155;
+      tingkat = "TIDAK_SEHAT";
+    } else if (lower.includes("surabaya") || lower.includes("bekasi")) {
+      indeks = 210;
+      tingkat = "BERBAHAYA";
+    } else {
+      indeks = 75;
+      tingkat = "SEDANG";
+    }
+
     // Update data laporan udara saat pencarian kota
     setLaporanUdara({
       kota: kota,
-      indeksAQI: 75,
-      tingkat: "SEDANG",
+      indeksAQI: indeks,
+      tingkat: tingkat,
       diperbaruiPada: "Baru saja",
     });
   }
@@ -146,6 +166,8 @@ export default function HalamanUtama() {
     <View style={{ padding: 16, gap: 16 }}>
       <SearchBox onCari={handleCari} />
       <WeatherCard kota={kotaAktif} suhu={29} tingkatAQI={laporanUdara.tingkat} />
+      {/* Integrasi Komponen IndikatorAQI */}
+      <IndikatorAQI laporan={laporanUdara} />
       <LaporanUdaraCard laporan={laporanUdara} />
       <RiwayatList daftarKota={riwayat} />
     </View>
