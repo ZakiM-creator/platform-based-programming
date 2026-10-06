@@ -1,7 +1,6 @@
 // src/components/IndikatorAQI.tsx
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { LaporanUdara, TingkatAQI } from "../../types/cuaca";
+import { StyleSheet, Text, View } from "react-native";
+import { LaporanUdara, TingkatAQI } from "../types/cuaca";
 
 export interface IndikatorAQIProps {
   laporan?: LaporanUdara;
@@ -21,35 +20,37 @@ export default function IndikatorAQI({ laporan, data }: IndikatorAQIProps) {
     switch (tingkat) {
       case "BAIK":
         return {
-          warnaTeks: "#15803D",     // Hijau
-          warnaLatar: "#DCFCE7",    // Hijau muda
-          warnaBorder: "#86EFAC",   // Border hijau
+          warnaTeks: "#15803D", // Hijau
+          warnaLatar: "#DCFCE7", // Hijau muda
+          warnaBorder: "#86EFAC", // Border hijau
           keterangan: "Kualitas udara sangat baik dan aman bagi pernapasan.",
         };
       case "SEDANG":
         return {
-          warnaTeks: "#D97706",     // Oranye / Kuning tua
-          warnaLatar: "#FEF3C7",    // Oranye/Kuning muda
-          warnaBorder: "#FDE68A",   // Border oranye
+          warnaTeks: "#D97706", // Oranye / Kuning tua
+          warnaLatar: "#FEF3C7", // Oranye/Kuning muda
+          warnaBorder: "#FDE68A", // Border oranye
           keterangan: "Kualitas udara dapat diterima untuk kebanyakan orang.",
         };
       case "TIDAK_SEHAT":
         return {
-          warnaTeks: "#DC2626",     // Merah
-          warnaLatar: "#FEE2E2",    // Merah muda
-          warnaBorder: "#FCA5A5",   // Border merah
-          keterangan: "Kualitas udara tidak sehat, gunakan masker bila bepergian.",
+          warnaTeks: "#DC2626", // Merah
+          warnaLatar: "#FEE2E2", // Merah muda
+          warnaBorder: "#FCA5A5", // Border merah
+          keterangan:
+            "Kualitas udara tidak sehat, gunakan masker bila bepergian.",
         };
       case "BERBAHAYA":
         return {
-          warnaTeks: "#7F1D1D",     // Merah Tua / Maroon
-          warnaLatar: "#FFE4E6",    // Pink / Merah pucat
-          warnaBorder: "#FDA4AF",   // Border maroon
-          keterangan: "Peringatan darurat! Kualitas udara berbahaya bagi masyarakat.",
+          warnaTeks: "#7F1D1D", // Merah Tua / Maroon
+          warnaLatar: "#FFE4E6", // Pink / Merah pucat
+          warnaBorder: "#FDA4AF", // Border maroon
+          keterangan:
+            "Peringatan darurat! Kualitas udara berbahaya bagi masyarakat.",
         };
       default:
         return {
-          warnaTeks: "#4B5563",     // Abu-abu
+          warnaTeks: "#4B5563", // Abu-abu
           warnaLatar: "#F3F4F6",
           warnaBorder: "#E5E7EB",
           keterangan: "Informasi kualitas udara tidak tersedia.",
@@ -81,10 +82,7 @@ export default function IndikatorAQI({ laporan, data }: IndikatorAQIProps) {
         </View>
 
         <View
-          style={[
-            styles.badgeAQI,
-            { backgroundColor: statusConfig.warnaTeks },
-          ]}
+          style={[styles.badgeAQI, { backgroundColor: statusConfig.warnaTeks }]}
         >
           <Text style={styles.badgeLabel}>AQI</Text>
           <Text style={styles.badgeValue}>{dataLaporan.indeksAQI}</Text>

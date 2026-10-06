@@ -1,6 +1,6 @@
 // src/components/LaporanUdaraCard.tsx
-import { View, Text } from "react-native";
-import { LaporanUdara } from "../../types/cuaca";
+import { Text, View } from "react-native";
+import { LaporanUdara } from "../types/cuaca";
 
 interface LaporanUdaraCardProps {
   laporan: LaporanUdara;
@@ -41,7 +41,9 @@ export default function LaporanUdaraCard({ laporan }: LaporanUdaraCardProps) {
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>
         Indeks AQI: {laporan.indeksAQI}
       </Text>
-      <Text style={{ color: getWarnaTingkat(laporan.tingkat), fontWeight: "bold" }}>
+      <Text
+        style={{ color: getWarnaTingkat(laporan.tingkat), fontWeight: "bold" }}
+      >
         Status: {laporan.tingkat}
       </Text>
       {laporan.diperbaruiPada && (
