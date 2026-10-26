@@ -7,21 +7,45 @@ import {
   Alert,
   Platform,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { Link, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ambilSemuaFavorit, hapusFavorit } from "../../services/favoritStorage";
+import { ambilRiwayat, MAKS_RIWAYAT } from "../../services/riwayatStorage";
 import { KotaFavorit } from "../../types/favorit";
+import { RiwayatPencarian } from "../../types/riwayat";
+
+// Penanda unik per ketukan, supaya mengetuk kota yang sama dua kali tetap memicu pencarian
+function buatPenandaWaktu(): string {
+  return String(Date.now());
+}
 
 export default function TabRiwayat() {
   const [daftarFavorit, setDaftarFavorit] = useState<KotaFavorit[]>([]);
+  const [daftarRiwayat, setDaftarRiwayat] = useState<RiwayatPencarian[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       ambilSemuaFavorit().then(setDaftarFavorit);
+      ambilRiwayat().then(setDaftarRiwayat);
     }, []),
   );
+
+  // Ketuk kota di riwayat: pindah ke Beranda dan langsung tampilkan cuacanya
+  function bukaPencarian(kota: RiwayatPencarian) {
+    router.navigate({
+      pathname: "/",
+      params: {
+        idKota: String(kota.id),
+        nama: kota.nama,
+        lat: String(kota.latitude),
+        lon: String(kota.longitude),
+        t: buatPenandaWaktu(),
+      },
+    });
+  }
 
   async function prosesHapus(id: number) {
     await hapusFavorit(id);
@@ -54,7 +78,8 @@ export default function TabRiwayat() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 16, gap: 12 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
       <Text style={{ fontSize: 18, fontWeight: "bold" }}>Kota Favorit</Text>
       <Text style={{ fontSize: 14, color: "#666" }}>
         Tersimpan {daftarFavorit.length} kota
@@ -98,6 +123,28 @@ export default function TabRiwayat() {
           />
         </View>
       ))}
+
+      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 12 }}>
+        Riwayat Pencarian
+      </Text>
+      <Text style={{ fontSize: 14, color: "#666" }}>
+        {daftarRiwayat.length} dari maksimal {MAKS_RIWAYAT} pencarian terakhir
+      </Text>
+
+      {daftarRiwayat.length === 0 && <Text>Belum ada riwayat pencarian</Text>}
+
+      {daftarRiwayat.map((kota) => (
+        <TouchableOpacity
+          key={kota.id}
+          accessibilityRole="button"
+          accessibilityLabel={`Cari cuaca ${kota.nama}`}
+          onPress={() => bukaPencarian(kota)}
+          style={{ minHeight: 44, justifyContent: "center" }}
+        >
+          <Text>{kota.nama}</Text>
+        </TouchableOpacity>
+      ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }

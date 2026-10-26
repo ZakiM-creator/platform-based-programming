@@ -1,5 +1,5 @@
 // src/app/(tabs)/index.tsx
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import SearchBox from "../../components/SearchBox";
 import WeatherCard from "../../components/WeatherCard";
@@ -25,6 +25,7 @@ import {
   bersihkanCacheLama,
   daftarKotaTersimpan,
 } from "../../services/cacheRepository";
+import { catatRiwayat } from "../../services/riwayatStorage";
 import {
   mintaIzinLokasi,
   ambilKoordinatSaatIni,
@@ -55,6 +56,15 @@ export default function HalamanUtama() {
   const [sedangMemuat, setSedangMemuat] = useState(false);
   const [pesanError, setPesanError] = useState<string | null>(null);
   const [pesanLokasi, setPesanLokasi] = useState<string | null>(null);
+
+  // Diisi tab Riwayat saat pengguna mengetuk salah satu kota di riwayat pencarian
+  const parameter = useLocalSearchParams<{
+    idKota?: string;
+    nama?: string;
+    lat?: string;
+    lon?: string;
+    t?: string; // penanda waktu, supaya mengetuk kota yang sama dua kali tetap terbaca
+  }>();
 
   const teksTertunda = useDebounce(teksCari, 500);
   const requestIdRef = useRef(0); // pencegah race condition
@@ -111,6 +121,16 @@ export default function HalamanUtama() {
 
   async function pilihKota(kota: HasilGeocoding, paksaPerbarui = false) {
     setKotaTerpilih(kota);
+    // Catat ke riwayat pencarian. Lokasi GPS (id -1) tidak dicatat: koordinat pengguna
+    // tidak perlu disimpan sebagai riwayat (prinsip minimalisasi data, Pertemuan 6)
+    if (kota.id !== -1) {
+      catatRiwayat({
+        id: kota.id,
+        nama: kota.name,
+        latitude: kota.latitude,
+        longitude: kota.longitude,
+      });
+    }
     const idSaatIni = ++requestIdRef.current;
     setSedangMemuat(true);
     setPesanError(null);
@@ -138,6 +158,31 @@ export default function HalamanUtama() {
       if (idSaatIni === requestIdRef.current) setSedangMemuat(false);
     }
   }
+
+  // Kota diketuk dari riwayat pencarian: saat Beranda difokuskan, langsung tampilkan cuacanya.
+  // Penanda yang sudah diproses dicatat agar kembali ke tab ini tidak mengulang pencarian.
+  const penandaDiprosesRef = useRef<string | undefined>(undefined);
+  useFocusEffect(
+    useCallback(() => {
+      const id = Number(parameter.idKota);
+      const latitude = Number(parameter.lat);
+      const longitude = Number(parameter.lon);
+      if (!parameter.t || !parameter.nama) return;
+      if (parameter.t === penandaDiprosesRef.current) return;
+      if (![id, latitude, longitude].every(Number.isFinite)) return;
+
+      penandaDiprosesRef.current = parameter.t;
+      pilihKota({
+        id,
+        name: parameter.nama,
+        latitude,
+        longitude,
+        country: "",
+      });
+      // Hanya bereaksi pada penanda waktu baru, bukan pada setiap render
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parameter.t]),
+  );
 
   async function gunakanLokasiSaatIni() {
     try {
