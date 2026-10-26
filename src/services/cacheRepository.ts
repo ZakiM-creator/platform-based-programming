@@ -90,6 +90,15 @@ export async function bersihkanCacheLama(batasUmurMs: number): Promise<void> {
     Date.now() - batasUmurMs,
   ]);
 }
+// Invalidation per kota: hapus cache satu lokasi, kembalikan jumlah baris yang terhapus
+export async function hapusCacheKota(kunci: string): Promise<number> {
+  const db = await ambilDatabase();
+  const hasil = await db.runAsync("DELETE FROM cache_cuaca WHERE kunci = ?", [
+    kunci,
+  ]);
+  return hasil.changes;
+}
+
 // Invalidation manual: kosongkan seluruh cache
 export async function hapusSemuaCache(): Promise<void> {
   const db = await ambilDatabase();

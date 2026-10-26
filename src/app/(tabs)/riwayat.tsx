@@ -14,6 +14,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ambilSemuaFavorit, hapusFavorit } from "../../services/favoritStorage";
 import { ambilRiwayat, MAKS_RIWAYAT } from "../../services/riwayatStorage";
+import { buatKunci, hapusCacheKota } from "../../services/cacheRepository";
+import { konfirmasi } from "../../utils/konfirmasi";
 import { KotaFavorit } from "../../types/favorit";
 import { RiwayatPencarian } from "../../types/riwayat";
 
@@ -25,6 +27,7 @@ function buatPenandaWaktu(): string {
 export default function TabRiwayat() {
   const [daftarFavorit, setDaftarFavorit] = useState<KotaFavorit[]>([]);
   const [daftarRiwayat, setDaftarRiwayat] = useState<RiwayatPencarian[]>([]);
+  const [pesanCache, setPesanCache] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,6 +48,28 @@ export default function TabRiwayat() {
         t: buatPenandaWaktu(),
       },
     });
+  }
+
+  function konfirmasiHapusCache(kota: RiwayatPencarian) {
+    konfirmasi(
+      "Hapus Cache",
+      `Hapus data cuaca tersimpan untuk ${kota.nama}?`,
+      "Hapus",
+      async () => {
+        try {
+          const terhapus = await hapusCacheKota(
+            buatKunci(kota.latitude, kota.longitude),
+          );
+          setPesanCache(
+            terhapus > 0
+              ? `Cache ${kota.nama} dihapus.`
+              : `Belum ada cache untuk ${kota.nama}.`,
+          );
+        } catch {
+          setPesanCache(`Gagal menghapus cache ${kota.nama}.`);
+        }
+      },
+    );
   }
 
   async function prosesHapus(id: number) {
@@ -134,16 +159,32 @@ export default function TabRiwayat() {
       {daftarRiwayat.length === 0 && <Text>Belum ada riwayat pencarian</Text>}
 
       {daftarRiwayat.map((kota) => (
-        <TouchableOpacity
+        <View
           key={kota.id}
-          accessibilityRole="button"
-          accessibilityLabel={`Cari cuaca ${kota.nama}`}
-          onPress={() => bukaPencarian(kota)}
-          style={{ minHeight: 44, justifyContent: "center" }}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          <Text>{kota.nama}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel={`Cari cuaca ${kota.nama}`}
+            onPress={() => bukaPencarian(kota)}
+            style={{ flex: 1, minHeight: 44, justifyContent: "center" }}
+          >
+            <Text>{kota.nama}</Text>
+          </TouchableOpacity>
+          <Button
+            title="Hapus Cache"
+            color="#d9534f"
+            accessibilityLabel={`Hapus cache ${kota.nama}`}
+            onPress={() => konfirmasiHapusCache(kota)}
+          />
+        </View>
       ))}
+
+      {pesanCache && <Text accessibilityLabel={pesanCache}>{pesanCache}</Text>}
       </ScrollView>
     </SafeAreaView>
   );

@@ -24,8 +24,10 @@ import {
 import {
   bersihkanCacheLama,
   daftarKotaTersimpan,
+  hapusCacheKota,
 } from "../../services/cacheRepository";
 import { catatRiwayat } from "../../services/riwayatStorage";
+import { konfirmasi } from "../../utils/konfirmasi";
 import {
   mintaIzinLokasi,
   ambilKoordinatSaatIni,
@@ -56,6 +58,7 @@ export default function HalamanUtama() {
   const [sedangMemuat, setSedangMemuat] = useState(false);
   const [pesanError, setPesanError] = useState<string | null>(null);
   const [pesanLokasi, setPesanLokasi] = useState<string | null>(null);
+  const [pesanCache, setPesanCache] = useState<string | null>(null);
 
   // Diisi tab Riwayat saat pengguna mengetuk salah satu kota di riwayat pencarian
   const parameter = useLocalSearchParams<{
@@ -95,6 +98,16 @@ export default function HalamanUtama() {
       .then(muatKotaTersimpan)
       .catch(() => {});
   }, []);
+
+  // Cache bisa berubah dari tab lain (hapus cache di Riwayat / Pengaturan):
+  // segarkan daftar setiap kali Beranda kembali difokuskan
+  useFocusEffect(
+    useCallback(() => {
+      daftarKotaTersimpan()
+        .then(setKotaTersimpan)
+        .catch(() => {});
+    }, []),
+  );
 
   useEffect(() => {
     if (kueriAktif === "") return;
@@ -184,6 +197,23 @@ export default function HalamanUtama() {
     }, [parameter.t]),
   );
 
+  function konfirmasiHapusCache(k: RingkasanKotaTersimpan) {
+    konfirmasi(
+      "Hapus Cache",
+      `Hapus data cuaca tersimpan untuk ${k.nama}?`,
+      "Hapus",
+      async () => {
+        try {
+          await hapusCacheKota(k.kunci);
+          setPesanCache(`Cache ${k.nama} dihapus.`);
+        } catch {
+          setPesanCache(`Gagal menghapus cache ${k.nama}.`);
+        }
+        muatKotaTersimpan().catch(() => {});
+      },
+    );
+  }
+
   async function gunakanLokasiSaatIni() {
     try {
       const status = await mintaIzinLokasi();
@@ -271,22 +301,41 @@ export default function HalamanUtama() {
               Tersimpan di perangkat (bisa dibuka offline)
             </Text>
             {kotaTersimpan.map((k) => (
-              <TouchableOpacity
+              <View
                 key={k.kunci}
-                onPress={() =>
-                  pilihKota({
-                    id: k.id,
-                    name: k.nama,
-                    latitude: k.latitude,
-                    longitude: k.longitude,
-                    country: "",
-                  })
-                }
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
-                <Text>{k.nama}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1, minHeight: 44, justifyContent: "center" }}
+                  onPress={() =>
+                    pilihKota({
+                      id: k.id,
+                      name: k.nama,
+                      latitude: k.latitude,
+                      longitude: k.longitude,
+                      country: "",
+                    })
+                  }
+                >
+                  <Text>{k.nama}</Text>
+                </TouchableOpacity>
+                <Button
+                  title="Hapus Cache"
+                  color="#d9534f"
+                  accessibilityLabel={`Hapus cache ${k.nama}`}
+                  onPress={() => konfirmasiHapusCache(k)}
+                />
+              </View>
             ))}
           </View>
+        )}
+
+        {pesanCache && (
+          <Text accessibilityLabel={pesanCache}>{pesanCache}</Text>
         )}
 
         {sedangMemuat && <ActivityIndicator />}
