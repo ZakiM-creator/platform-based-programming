@@ -1,5 +1,7 @@
 // src/components/WeatherCard.tsx
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import { Text } from "./TeksTema";
+import { useTheme } from "../hooks/use-theme";
 import { WeatherCardProps, TingkatAQI } from "../types/cuaca";
 import { typeScale, spacing } from "../constants/styles";
 
@@ -16,6 +18,7 @@ export default function WeatherCard({
   tingkatAQI,
   indeksAQI,
 }: WeatherCardProps) {
+  const warna = useTheme();
   const teksAQI =
     indeksAQI !== undefined
       ? `AQI: ${indeksAQI} (${tingkatAQI})`
@@ -33,7 +36,7 @@ export default function WeatherCard({
       style={{
         padding: spacing.sedang,
         borderRadius: 8,
-        backgroundColor: "#F4F7FA",
+        backgroundColor: warna.backgroundElement,
       }}
     >
       <Text style={{ fontWeight: "bold", fontSize: typeScale.judul }}>

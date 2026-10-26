@@ -1,8 +1,9 @@
 // src/app/detail/[kota].tsx
 import { useEffect, useState } from "react";
-import { View, Text, Button, ActivityIndicator } from "react-native";
+import { View, Button, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 
+import { Text } from "../../components/TeksTema";
 import WeatherCard from "../../components/WeatherCard";
 import StatusData from "../../components/StatusData";
 import { ambilCuacaOfflineFirst } from "../../services/cuacaRepository";

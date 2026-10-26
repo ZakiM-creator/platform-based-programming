@@ -2,7 +2,6 @@
 import { useState, useCallback } from "react";
 import {
   View,
-  Text,
   Button,
   Alert,
   Platform,
@@ -12,6 +11,8 @@ import {
 import { Link, router, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Text } from "../../components/TeksTema";
+import { useTheme } from "../../hooks/use-theme";
 import { ambilSemuaFavorit, hapusFavorit } from "../../services/favoritStorage";
 import { ambilRiwayat, MAKS_RIWAYAT } from "../../services/riwayatStorage";
 import { buatKunci, hapusCacheKota } from "../../services/cacheRepository";
@@ -28,6 +29,7 @@ export default function TabRiwayat() {
   const [daftarFavorit, setDaftarFavorit] = useState<KotaFavorit[]>([]);
   const [daftarRiwayat, setDaftarRiwayat] = useState<RiwayatPencarian[]>([]);
   const [pesanCache, setPesanCache] = useState<string | null>(null);
+  const warna = useTheme();
 
   useFocusEffect(
     useCallback(() => {
@@ -106,7 +108,7 @@ export default function TabRiwayat() {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
       <Text style={{ fontSize: 18, fontWeight: "bold" }}>Kota Favorit</Text>
-      <Text style={{ fontSize: 14, color: "#666" }}>
+      <Text style={{ fontSize: 14, color: warna.textSecondary }}>
         Tersimpan {daftarFavorit.length} kota
       </Text>
 
@@ -152,7 +154,7 @@ export default function TabRiwayat() {
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 12 }}>
         Riwayat Pencarian
       </Text>
-      <Text style={{ fontSize: 14, color: "#666" }}>
+      <Text style={{ fontSize: 14, color: warna.textSecondary }}>
         {daftarRiwayat.length} dari maksimal {MAKS_RIWAYAT} pencarian terakhir
       </Text>
 

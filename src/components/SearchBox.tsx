@@ -2,12 +2,15 @@
 import { useState } from "react";
 import { View, TextInput } from "react-native";
 
+import { useTheme } from "../hooks/use-theme";
+
 interface SearchBoxProps {
   onCari: (teks: string) => void;
 }
 
 export default function SearchBox({ onCari }: SearchBoxProps) {
   const [teks, setTeks] = useState("");
+  const warna = useTheme();
 
   function handleChange(nilaiBaru: string) {
     setTeks(nilaiBaru);
@@ -18,10 +21,17 @@ export default function SearchBox({ onCari }: SearchBoxProps) {
     <View>
       <TextInput
         placeholder="Cari nama kota..."
+        placeholderTextColor={warna.textSecondary}
         value={teks}
         onChangeText={handleChange}
         accessibilityLabel="Cari cuaca untuk kota yang dimasukkan"
-        style={{ borderWidth: 1, padding: 8, borderRadius: 8 }}
+        style={{
+          borderWidth: 1,
+          padding: 8,
+          borderRadius: 8,
+          color: warna.text,
+          borderColor: warna.textSecondary,
+        }}
       />
     </View>
   );

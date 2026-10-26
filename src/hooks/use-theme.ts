@@ -4,11 +4,11 @@
  */
 
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useTema } from '@/components/TemaProvider';
 
+// Warna mengikuti pilihan pengguna di Pengaturan (Terang / Gelap / Ikuti Sistem)
 export function useTheme() {
-  const scheme = useColorScheme();
-  const theme = scheme === 'dark' ? 'dark' : 'light';
+  const { skema } = useTema();
 
-  return Colors[theme];
+  return Colors[skema];
 }

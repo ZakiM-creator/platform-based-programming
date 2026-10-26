@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
-  Text,
   ScrollView,
   ActivityIndicator,
   Button,
@@ -11,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
+import { Text } from "../../components/TeksTema";
 import SearchBox from "../../components/SearchBox";
 import WeatherCard from "../../components/WeatherCard";
 import AtribusiCuaca from "../../components/AtribusiCuaca";

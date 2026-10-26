@@ -1,6 +1,7 @@
 // src/app/tambah-favorit.tsx
-import { View, Text, Button } from "react-native";
+import { View, Button } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { Text } from "../components/TeksTema";
 import { tambahFavorit } from "../services/favoritStorage";
 
 export default function ModalTambahFavorit() {

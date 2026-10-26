@@ -1,10 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+
+import { Text } from "../../components/TeksTema";
+import { useTheme } from "../../hooks/use-theme";
 import { typeScale, spacing } from "../../constants/styles";
 
 export default function TentangScreen() {
+  const warna = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: warna.background }]}>
       <Text style={styles.judul} accessibilityLabel="Judul halaman tentang">
         Orientasi Jelajah Aman
       </Text>
@@ -28,7 +33,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: spacing.sedang,
-    backgroundColor: "#fff",
   },
   judul: {
     fontSize: typeScale.judul,
