@@ -54,3 +54,7 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Status Data: Cache Segar, Cache Basi, dan First-Run Offline
+
+Jelajah Aman menyimpan hasil cuaca dan kualitas udara terakhir di SQLite agar tetap bisa dibuka tanpa internet. **Cache segar** berarti data tersimpan berumur kurang dari 30 menit, sehingga aplikasi langsung memakainya tanpa memanggil internet. **Cache basi** berarti data tersimpan sudah lebih tua dari 30 menit dan internet gagal dihubungi, sehingga aplikasi menampilkan data lama itu dengan label oranye "mungkin sudah usang". **First-run offline** berarti belum ada cache sama sekali dan internet juga tidak ada, sehingga aplikasi tidak punya data untuk ditampilkan dan hanya menampilkan pesan error beserta tombol "Coba Lagi". Label status data penting karena pengguna berhak tahu apakah angka suhu dan kualitas udara yang dilihatnya berasal dari internet atau salinan lama, supaya tidak salah mengambil keputusan, misalnya saat menentukan apakah aman beraktivitas di luar ruangan.
