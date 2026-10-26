@@ -160,7 +160,9 @@ export default function HalamanUtama() {
       );
       if (idSaatIni !== requestIdRef.current) return; // hasil basi, abaikan
       setHasil(data);
-      muatKotaTersimpan();
+      // Daftar tersimpan hanyalah pelengkap: jika database tidak bisa dibuka (misalnya
+      // web dengan dua tab terbuka), cuaca tetap tampil dan tidak ada error tak tertangani
+      muatKotaTersimpan().catch(() => {});
     } catch {
       if (idSaatIni !== requestIdRef.current) return;
       setHasil(null);

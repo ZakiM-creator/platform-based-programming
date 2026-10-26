@@ -22,8 +22,12 @@ export default function TabPengaturan() {
   const warna = useTheme();
 
   async function hapusDataTersimpan() {
-    await hapusSemuaCache();
-    setPesan("Data cuaca tersimpan sudah dihapus.");
+    try {
+      await hapusSemuaCache();
+      setPesan("Data cuaca tersimpan sudah dihapus.");
+    } catch {
+      setPesan("Gagal menghapus data cuaca tersimpan.");
+    }
   }
 
   return (
