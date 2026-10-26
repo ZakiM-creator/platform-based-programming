@@ -11,6 +11,16 @@ export default function ModalTambahFavorit() {
     lon: string;
   }>();
 
+  // Jangan pernah menyimpan favorit dari parameter yang kosong atau bukan angka
+  const dataValid =
+    !!nama &&
+    !!id &&
+    !!lat &&
+    !!lon &&
+    Number.isFinite(Number(id)) &&
+    Number.isFinite(Number(lat)) &&
+    Number.isFinite(Number(lon));
+
   async function simpan() {
     await tambahFavorit({
       id: Number(id),
@@ -19,6 +29,18 @@ export default function ModalTambahFavorit() {
       longitude: Number(lon),
     });
     router.back();
+  }
+
+  if (!dataValid) {
+    return (
+      <View style={{ padding: 16, gap: 16 }}>
+        <Text accessibilityLabel="Data kota tidak lengkap, tidak bisa disimpan">
+          Data kota tidak lengkap sehingga tidak bisa disimpan. Buka dari Beranda
+          atau halaman Detail.
+        </Text>
+        <Button title="Tutup" onPress={() => router.back()} />
+      </View>
+    );
   }
 
   return (

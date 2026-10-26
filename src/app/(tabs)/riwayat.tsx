@@ -1,7 +1,14 @@
 // src/app/(tabs)/riwayat.tsx
 import { useState, useCallback } from "react";
-import { View, Text, Button, Alert, Platform } from "react-native";
-import { useFocusEffect } from "expo-router";
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
+import { Link, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ambilSemuaFavorit, hapusFavorit } from "../../services/favoritStorage";
@@ -64,7 +71,26 @@ export default function TabRiwayat() {
             alignItems: "center",
           }}
         >
-          <Text>{kota.nama}</Text>
+          <Link
+            href={{
+              pathname: "/detail/[kota]",
+              params: {
+                kota: kota.nama,
+                id: String(kota.id),
+                lat: String(kota.latitude),
+                lon: String(kota.longitude),
+              },
+            }}
+            asChild
+          >
+            <TouchableOpacity
+              accessibilityRole="link"
+              accessibilityLabel={`Lihat detail cuaca ${kota.nama}`}
+              style={{ flex: 1, minHeight: 44, justifyContent: "center" }}
+            >
+              <Text>{kota.nama}</Text>
+            </TouchableOpacity>
+          </Link>
           <Button
             title="Hapus"
             color="#d9534f"
