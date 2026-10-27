@@ -15,6 +15,7 @@ import SearchBox from "../../components/SearchBox";
 import WeatherCard from "../../components/WeatherCard";
 import AtribusiCuaca from "../../components/AtribusiCuaca";
 import StatusData from "../../components/StatusData";
+import InfoTambahan from "../../components/InfoTambahan";
 import { useDebounce } from "../../hooks/use-debounce";
 import { cariKota } from "../../services/geocodingService";
 import {
@@ -368,6 +369,10 @@ export default function HalamanUtama() {
               Kondisi: {labelKodeCuaca(hasil.cuaca.saatIni.kodeCuaca)}{" "}
               {"\u2022"} Angin {hasil.cuaca.saatIni.kecepatanAngin} km/j
             </Text>
+            <InfoTambahan
+              cuaca={hasil.cuaca}
+              kualitasUdara={hasil.kualitasUdara}
+            />
             <Button
               title="Perbarui Sekarang"
               onPress={() => pilihKota(kotaTerpilih, true)}

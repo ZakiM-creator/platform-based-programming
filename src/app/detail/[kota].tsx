@@ -6,6 +6,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { Text } from "../../components/TeksTema";
 import WeatherCard from "../../components/WeatherCard";
 import StatusData from "../../components/StatusData";
+import InfoTambahan from "../../components/InfoTambahan";
 import { ambilCuacaOfflineFirst } from "../../services/cuacaRepository";
 import { konversiTingkatAQI } from "../../services/weatherAdapter";
 import { labelKodeCuaca } from "../../constants/weatherCodes";
@@ -104,6 +105,10 @@ export default function HalamanDetail() {
             Kondisi: {labelKodeCuaca(hasil.cuaca.saatIni.kodeCuaca)}{" "}
             {"•"} Angin {hasil.cuaca.saatIni.kecepatanAngin} km/j
           </Text>
+          <InfoTambahan
+            cuaca={hasil.cuaca}
+            kualitasUdara={hasil.kualitasUdara}
+          />
         </>
       )}
 
