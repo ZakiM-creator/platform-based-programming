@@ -382,6 +382,20 @@ export default function HalamanUtama() {
               onPress={() => pilihKota(kotaTerpilih, true)}
             />
             <Button
+              title="Lihat Detail"
+              onPress={() =>
+                router.push({
+                  pathname: "/detail/[kota]",
+                  params: {
+                    kota: kotaTerpilih.name,
+                    id: String(kotaTerpilih.id),
+                    lat: String(kotaTerpilih.latitude),
+                    lon: String(kotaTerpilih.longitude),
+                  },
+                })
+              }
+            />
+            <Button
               title="Tambahkan ke Favorit"
               onPress={() =>
                 router.push({
