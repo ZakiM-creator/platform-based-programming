@@ -16,6 +16,7 @@ import WeatherCard from "../../components/WeatherCard";
 import AtribusiCuaca from "../../components/AtribusiCuaca";
 import StatusData from "../../components/StatusData";
 import InfoTambahan from "../../components/InfoTambahan";
+import SaranKeselamatan from "../../components/SaranKeselamatan";
 import { useDebounce } from "../../hooks/use-debounce";
 import { cariKota } from "../../services/geocodingService";
 import {
@@ -372,6 +373,9 @@ export default function HalamanUtama() {
             <InfoTambahan
               cuaca={hasil.cuaca}
               kualitasUdara={hasil.kualitasUdara}
+            />
+            <SaranKeselamatan
+              tingkatAQI={konversiTingkatAQI(hasil.kualitasUdara.indeksAQI)}
             />
             <Button
               title="Perbarui Sekarang"

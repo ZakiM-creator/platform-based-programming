@@ -7,6 +7,7 @@ import { Text } from "../../components/TeksTema";
 import WeatherCard from "../../components/WeatherCard";
 import StatusData from "../../components/StatusData";
 import InfoTambahan from "../../components/InfoTambahan";
+import SaranKeselamatan from "../../components/SaranKeselamatan";
 import { ambilCuacaOfflineFirst } from "../../services/cuacaRepository";
 import { konversiTingkatAQI } from "../../services/weatherAdapter";
 import { labelKodeCuaca } from "../../constants/weatherCodes";
@@ -108,6 +109,9 @@ export default function HalamanDetail() {
           <InfoTambahan
             cuaca={hasil.cuaca}
             kualitasUdara={hasil.kualitasUdara}
+          />
+          <SaranKeselamatan
+            tingkatAQI={konversiTingkatAQI(hasil.kualitasUdara.indeksAQI)}
           />
         </>
       )}

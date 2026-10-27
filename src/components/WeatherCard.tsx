@@ -5,7 +5,7 @@ import { useTheme } from "../hooks/use-theme";
 import { WeatherCardProps, TingkatAQI } from "../types/cuaca";
 import { typeScale, spacing } from "../constants/styles";
 
-const warnaPerTingkat: Record<TingkatAQI, string> = {
+export const warnaPerTingkat: Record<TingkatAQI, string> = {
   BAIK: "green",
   SEDANG: "goldenrod",
   TIDAK_SEHAT: "orange",
