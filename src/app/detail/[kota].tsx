@@ -6,11 +6,11 @@ import { useLocalSearchParams, router } from "expo-router";
 import { Text } from "../../components/TeksTema";
 import WeatherCard from "../../components/WeatherCard";
 import StatusData from "../../components/StatusData";
+import KondisiCuaca from "../../components/KondisiCuaca";
 import InfoTambahan from "../../components/InfoTambahan";
 import SaranKeselamatan from "../../components/SaranKeselamatan";
 import { ambilCuacaOfflineFirst } from "../../services/cuacaRepository";
 import { konversiTingkatAQI } from "../../services/weatherAdapter";
-import { labelKodeCuaca } from "../../constants/weatherCodes";
 import { HasilCuacaOffline } from "../../types/cache";
 
 // Hasil satu kali pemuatan, ditandai nomor percobaannya
@@ -102,10 +102,10 @@ export default function HalamanDetail() {
             tingkatAQI={konversiTingkatAQI(hasil.kualitasUdara.indeksAQI)}
             indeksAQI={hasil.kualitasUdara.indeksAQI}
           />
-          <Text style={{ fontSize: 12, color: "#888888" }}>
-            Kondisi: {labelKodeCuaca(hasil.cuaca.saatIni.kodeCuaca)}{" "}
-            {"•"} Angin {hasil.cuaca.saatIni.kecepatanAngin} km/j
-          </Text>
+          <KondisiCuaca
+            kodeCuaca={hasil.cuaca.saatIni.kodeCuaca}
+            kecepatanAngin={hasil.cuaca.saatIni.kecepatanAngin}
+          />
           <InfoTambahan
             cuaca={hasil.cuaca}
             kualitasUdara={hasil.kualitasUdara}

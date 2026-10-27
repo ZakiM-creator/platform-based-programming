@@ -15,6 +15,7 @@ import SearchBox from "../../components/SearchBox";
 import WeatherCard from "../../components/WeatherCard";
 import AtribusiCuaca from "../../components/AtribusiCuaca";
 import StatusData from "../../components/StatusData";
+import KondisiCuaca from "../../components/KondisiCuaca";
 import InfoTambahan from "../../components/InfoTambahan";
 import SaranKeselamatan from "../../components/SaranKeselamatan";
 import { useDebounce } from "../../hooks/use-debounce";
@@ -35,7 +36,6 @@ import {
   ambilKoordinatSaatIni,
 } from "../../services/locationService";
 import { konversiTingkatAQI } from "../../services/weatherAdapter";
-import { labelKodeCuaca } from "../../constants/weatherCodes";
 import { HasilGeocoding } from "../../types/geocoding";
 import { HasilCuacaOffline, RingkasanKotaTersimpan } from "../../types/cache";
 
@@ -366,10 +366,10 @@ export default function HalamanUtama() {
               tingkatAQI={konversiTingkatAQI(hasil.kualitasUdara.indeksAQI)}
               indeksAQI={hasil.kualitasUdara.indeksAQI}
             />
-            <Text style={{ fontSize: 12, color: "#888888" }}>
-              Kondisi: {labelKodeCuaca(hasil.cuaca.saatIni.kodeCuaca)}{" "}
-              {"\u2022"} Angin {hasil.cuaca.saatIni.kecepatanAngin} km/j
-            </Text>
+            <KondisiCuaca
+              kodeCuaca={hasil.cuaca.saatIni.kodeCuaca}
+              kecepatanAngin={hasil.cuaca.saatIni.kecepatanAngin}
+            />
             <InfoTambahan
               cuaca={hasil.cuaca}
               kualitasUdara={hasil.kualitasUdara}
